@@ -1,0 +1,72 @@
+#!/usr/bin/python
+window_gap = 0
+window_gap = 20
+#window_gap = 4
+window_gap = 0
+window_gap = 4
+window_gap = 10
+window_gap = 0
+#left_padding = window_gap*3
+left_padding = window_gap//2
+right_padding = left_padding//2
+bottom_padding = window_gap//2
+top_padding = window_gap//2
+
+#32寸配置
+#window_gap = 0
+#left_padding=35
+#right_padding=35
+#top_padding=20
+#bottom_padding=20
+
+navigate_across_workspaces = False  # True  # availabe in viewports desktops
+
+##monitors=[[0,1080-900,1440,900],[1440,0,1920,1080],[1440+1920,1080-900,1600,900],[1440+1920+1600,1080-720,1280,720]]
+
+#多屏使用的时候,需要term的外边框来辨识active窗口,所以不能最大化去掉外边框
+maximize_single_window = True
+
+fullscreen_tiling = True
+
+exclude_wm_class = [
+    'projectM-pulseaudio',
+    #'wesnoth-1.12',
+    #'vlc',
+    #'mpv',
+    'smplayer',
+    #'cantata',
+    'notile',
+    'notile_visual',
+    'noblur_notile_visual',
+    'nofocus',
+]
+
+#VIM_SERVER_NAME = " - (VIMSERVER\d+)$"
+#VIM_NAVIGATION_CMD = """vim --servername {vimserver} --remote-expr "TileFocusWindow('{target}')" """
+#
+#EMACS_WINDOW_NAME = ".+emacs.+"
+#EMACS_NAVIGATION_CMD = "emacsclient -e '(evil-window-{target} 1)'"
+## vim 写Python的时候,下方有一个提示栏,基本是被忽略,在移动的时候会变成阻碍
+## 并且首先我们vim中不开两个文件,其他功能窗口的移动则本身都和快捷键有关,
+## 如此的话,在vim中无缝的tile移动就没有价值了,
+## 反而因为 ycm只读窗口等的存在,变成了很大的妨碍
+#
+## 这办法不行,文件名太长的时候会丢失 SERVER名字的部分
+#VIM_SERVER_NAME = None
+#
+## emacs,我们基本还无力掌握它的split 窗口,尤其是现在开了server 的情况下,如何在server中制定一个特定的window 进行控制,
+## 这里面的问题是,我们完全不了解 emacs server 的底层机制,它有多少分窗口,或者buffer"
+## 如此的原因来说,我们无法掌握,用了反而是麻烦,所以现在的emacs 都是维持单一窗口的
+## 因此 也不需要tile 的无缝移动
+#EMACS_WINDOW_NAME = None
+
+
+#为latte dock省出的空间
+#不最大化窗口,就可以保留latte不dodge
+left_padding=89
+top_padding = 32
+maximize_single_window = False #True
+
+left_padding=0
+top_padding=0
+maximize_single_window = True #False #True

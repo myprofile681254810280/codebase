@@ -1,0 +1,3 @@
+#!/bin/bash
+#bash mkv2mp4 input.ape output.flac
+ffmpeg -i "$1" "$2"

@@ -1,0 +1,9 @@
+for plain text
+
+syntax off
+set nonu
+
+map j gj
+map k gk
+map h <BS>
+map l <space>

@@ -1,0 +1,103 @@
+#!/bin/bash
+
+#2017-09-09 02:59:18 Sat NZST
+#以下并不可用
+#没有理想的可以抓取到expo的办法.或许compiz自身条件不够,或许硬件条件不够,或许机制有问题
+#安装virtualgl用vglrun
+#不过vgl配置太麻烦了,所以算了
+#据说配置完了能提高性能,但是ssh的环节我不太理解.此外似乎是专门针对x的,那么wayland的情况又如何呢?
+
+#2017-09-09 15:05:35 Sat NZST
+#出问题的原因锁定为n卡的一个选项
+#使用simplescreenrecorder的时候,它会帮助主动关掉它.之后用ffmpeg也没有问题了
+#似乎是在nvidia-setting 中关掉 OpenGL allow flipping 选项
+
+#OUT=out_video.mp4
+#ffmpeg -f x11grab -s 1920x1080 -i :0.0+0,0 $OUT
+
+OUT=grab.avi
+rm $OUT
+ffmpeg -f x11grab -s 1920x1080 -i $DISPLAY -qscale 0 -vcodec huffyuv grab.avi
+
+ffmpeg -f x11grab -s 1920x1080 -i $DISPLAY -vcodec huffyuv -f alsa -ac 2 grab.avi
+
+ffmpeg -video_size 1024x768 -framerate 25 -f x11grab -i $DISPLAY -f pulse -ac 2 -i default output.mkv
+
+ffmpeg \
+    -f pulse -ac 2 -i default \
+    -f x11grab -s 1920x1080 -i $DISPLAY -vcodec huffyuv \
+    grab.mkv
+ffmpeg -i grab.mkv -max_muxing_queue_size 9999 output.mp4
+#ffmpeg -video_size 1024x768 -framerate 25 -f x11grab -i $DISPLAY  -vcodec huffyuv -f alsa -ac 2 -i hw:0 output.avi
+
+
+#ffmpeg -f pulse -i default -f x11grab -r 25 -s 1440x900 -i $DISPLAY -acodec libmp3lame -vcodec libx264 -preset ultrafast out.avi
+
+#然后是后期转换
+
+#到mp4或者mkv.可以直接上传imgur,不用本地转换gif.但是会被imgur压缩,并且格式依旧是视屏
+#ffmpeg -i grab.avi grab.mp4
+#或者直接到gif.不过imgur似乎不接受gif,还是会被转换,大概需要其他上传站点
+#ffmpeg -i grab.avi full.gif
+#ffmpeg -i grab.avi -vf scale=1920:-1 -r 10 1920.gif
+#缩小到960
+#ffmpeg -i grab.avi -vf scale=960:-1 -r 10 960.gif
+#ffmpeg -i grab.avi -vf scale=540:-1 -r 10 540.gif
+ffmpeg -i grab.avi -vf scale=480:-1 -r 10 480.gif
+#ffmpeg -i grab.avi -vf scale=240:-1 -r 10 240.gif
+
+
+
+#ffmpeg -y -i file.mp4 -vf palettegen palette.png
+#ffmpeg -y -i file.mp4 -i palette.png -filter_complex paletteuse -r 10 -s 320x480 file.gif
+
+ffmpeg -i grab.mp4 -t 00:00:30 -c copy g1.mp4
+
+#加速
+ffmpeg -i grab.mp4 -filter:v "setpts=0.5*PTS" g2.mp4
+ffmpeg -i grab.mp4 -filter:v "setpts=0.4*PTS" g3.mp4
+ffmpeg -i grab3.mp4 -filter:v "setpts=0.25*PTS" g4.mp4
+#声音加速
+ffmpeg -i grab.mp4  -filter:a "atempo=2.0"  -filter:v "setpts=0.5*PTS" g2.mp4
+
+
+
+########################################################
+#2019-01-24 13:58:48 Thu CST
+#截取
+ffmpeg \
+    -f pulse -ac 2 -i default \
+    -f x11grab -s 1920x1080 -i $DISPLAY -vcodec huffyuv \
+    grab.mkv
+#切割时段
+#          开始时间                           长度
+ffmpeg -ss 00:02:20.0 -i grab.mkv -c copy -t 00:00:20.0 out1.mkv
+#剪切 crop
+ffmpeg -i out1.mkv -filter:v "crop=1920:40:0:1040" out2.mkv
+#转换apng
+ffmpeg -i out2.mkv -ss 00:00:07.4 -vf scale=960:-1 -t 00:00:05.0 full.gif
+
+ffmpeg -i full.gif -vf scale=480:-1 full2.gif
+
+#转换gif
+ffmpeg -i grab.mkv full.gif
+#转换到jpg
+ffmpeg -i full.gif %d.jpg
+#处理jpg,并且重命名后,合并为gif
+ffmpeg -framerate 5 -i %d.jpg full.gif 
+
+#先加速
+ffmpeg -i grab.mkv -filter:v "setpts=0.25*PTS" out1.mp4
+#转换到jpg
+ffmpeg -i out1.mp4 out2/%d.jpg
+ffmpeg -framerate 5 -i out2/%d.jpg full.gif 
+
+#直接设定帧率和大小
+ffmpeg -i grab.mkv -vf scale=480:-1 -r 10 out5/%d.png
+ffmpeg -i grab.mkv -vf scale=960:-1 -r 10 960.gif
+#转换到jpg编辑
+ffmpeg -i grab.mkv -vf scale=960:-1 -r 10 out3/%d.jpg
+ffmpeg -r 10 -i out3/%d.jpg full.gif 
+
+ffmpeg -i grab.mkv -vf scale=720:-1 -r 10 out4/%d.jpg
+ffmpeg -r 10 -i out5/%d.png full.gif 

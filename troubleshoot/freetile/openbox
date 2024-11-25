@@ -1,0 +1,66 @@
+#!/usr/bin/python
+# 这是compiz0.8的配置,
+# compiz0.9 standalone应该也没有问题下,在unity下面外围padding要设到5以上才能正常运作.具体我不记得了,是8,10,还是15来着
+#WinBorder = 2
+#Padding = 2
+#WinBorder = 0
+# 有必要设成1,因为否则,第一次tile后,仍然会有窗口(term以外的,firefox之类的,估计和decro有关)重叠,第二次tile才会消除重叠.不知道原因,
+# qmlterm点阵模式下可以用0,精确分配像素.
+#WinBorder = 1
+#Padding = 2
+#WinBorder = 0
+#Padding = 0
+WinBorder = 5
+WinBorder = 1
+Padding = WinBorder * 2
+
+LeftPadding = Padding
+BottomPadding = Padding
+TopPadding = BottomPadding
+RightPadding = BottomPadding
+NavigateAcrossWorkspaces = False  # True  # availabe in viewports desktops
+TempFile = "/tmp/kd_tree_tile"
+LockFile = "/tmp/kd_tree_tile_lock"
+LogFile = '/tmp/kd_tree_tile.log'
+
+
+
+EXCLUDE_APPLICATIONS = ['<unknown>', 'x-nautilus-desktop', 'unity-launcher',
+                        'unity-panel', 'Hud', 'unity-dash', 'Desktop',
+                        'Docky', 'conky', 'Conky'
+                        'screenkey', 'XdndCollectionWindowImp',
+                        "Unigine Heaven Benchmark 4.0 Basic (OpenGL)",
+                        "Unigine Valley Benchmark 1.0 Basic (OpenGL)",
+                        "yabar",
+                        "Pokemon Revolution",
+                        ]
+# An alternative method to exclude applications.
+EXCLUDE_WM_CLASS = ['conky', 'Conky', 'tint2', 'xfce4-panel',
+                    'projectM-pulseaudio',
+                    #'wesnoth-1.12',
+                    #'vlc',
+                    'conky_graph',
+                    #'wesnoth',
+                    'dockx',
+                    'mpv',
+                    'notile',
+                    'yabar',
+                    'notile_visual',
+                    'noblur_notile_visual',
+                    ]
+
+UNRESIZABLE_APPLICATIONS = ['Screenkey']
+RESIZE_STEP = 48 * 3  # 设为8的整数倍匹配qmlterm 精准点阵模式中一个字符的大小
+MOVE_STEP = 48 * 3
+MOVE_STEP = 24*3
+MIN_WINDOW_WIDTH = 50
+MIN_WINDOW_HEIGHT = 50
+
+COMPIZ0_8 = False
+
+REGULARIZE_FULLSCREEN = True
+# NOFRAME_WMCLASS = ['Wine']
+
+# In i3-wm's window tree, only one child of a node is allowed to split.
+# MAX_KD_TREE_BRANCH = 1
+MAX_KD_TREE_BRANCH = 3

@@ -1,0 +1,15 @@
+#!/bin/bash
+#pydev
+~/eclipse/eclipse -nosplash -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/releases/mars/,http://pydev.org/updates/ -installIU org.python.pydev.feature.feature.group
+
+cd /dev/shm
+wget http://sourceforge.net/projects/eclim/files/eclim/2.5.0/eclim_2.5.0.jar/download
+mv download eclim.jar
+#安装选择组件 比如web python
+#java -jar eclim.jar
+java \
+  -Dvim.files=$HOME/.vim \
+  -Declipse.home=$HOME/eclipse \
+  -jar eclim.jar install
+#
+~/eclipse/eclimd
